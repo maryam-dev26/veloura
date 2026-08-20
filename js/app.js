@@ -1,3 +1,6 @@
+let activeCategory = "all"
+const filterButtons = document.querySelectorAll(".filters button")
+
 const products = [
     {
         id: 1,
@@ -14,7 +17,7 @@ const products = [
         category: "Clothing",
         price: 3250,
         description: "A tailored blazer designed for a polished and effortless look.",
-        image: "assets/images/blazer2.jpg",
+        image: "assets/images/clothing.jpg",
         rating: 4.7
     },
     {
@@ -23,7 +26,7 @@ const products = [
         category: "Jewelry",
         price: 890,
         description: "Simple and elegant earrings for everyday styling.",
-        image: "assets/images/earrings.jpg",
+        image: "assets/images/jewelry.jpg",
         rating: 4.6
     },
     {
@@ -35,7 +38,15 @@ const products = [
         image: "assets/images/sneakers.jpg",
         rating: 4.8
     }
-];
+]
+
+filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        activeCategory = button.dataset.category
+        renderProducts(getFilteredProducts())
+    })
+})
+
 
 function createProductCard(product) {
     return `
@@ -46,11 +57,18 @@ function createProductCard(product) {
             <p class="price">৳ ${product.price}</p>
             <button>Add to Cart</button>
         </article>
-    `;
+    `
+}
+
+function getFilteredProducts () {
+    if (activeCategory === "all"){
+         return products
+    }
+    return products.filter(product => product.category === activeCategory)
 }
 
 function renderProducts(productList) {
-const productCards = products.map(product => {
+const productCards = productList.map(product => {
     return createProductCard(product)
 })
 
@@ -59,4 +77,4 @@ const productGrid = document.querySelector("#product-grid")
 productGrid.innerHTML = productCards.join("")
 }
 
-renderProducts(products)
+renderProducts(getFilteredProducts())
