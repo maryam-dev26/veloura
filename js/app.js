@@ -1,4 +1,6 @@
 let activeCategory = "all"
+let searchQuery = ""
+const searchInput = document.querySelector("#search-input")
 const filterButtons = document.querySelectorAll(".filters button")
 
 const products = [
@@ -53,19 +55,30 @@ function createProductCard(product) {
     `
 }
 
+searchInput.addEventListener("input", () => {
+     searchQuery = searchInput.value
+     renderProducts(getFilteredProducts())
+})
+
 function getFilteredProducts () {
-    if (activeCategory === "all"){
-         return products
-    }
-    return products.filter(product => product.category === activeCategory)
+    return products.filter(product => {
+        const matchesCategory = activeCategory === "all" || product.category === activeCategory
+        const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        return matchesCategory && matchesSearch
+    })
 }
 
 function renderProducts(productList) {
+const productGrid = document.querySelector("#product-grid")
+
+    if(productList.length === 0) {
+        productGrid.innerHTML = "<p class ='no-result'> No product found</p>"
+        return
+    }
+
 const productCards = productList.map(product => {
     return createProductCard(product)
 })
-
-const productGrid = document.querySelector("#product-grid")
 
 productGrid.innerHTML = productCards.join("")
 }
