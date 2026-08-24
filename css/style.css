@@ -142,6 +142,34 @@ button:hover {
     margin-bottom: var(--spacing-sm);
 }
 
+.search-box {
+    position: relative;
+    width: 380px;
+    margin: 0 auto var(--spacing-lg);
+}
+
+.search-box::before {
+    content: "⌕";
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-muted);
+    font-size: 20px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 14px 18px 14px 45px;
+    border: 1px solid var(--color-border);
+    border-radius: 50px;
+    background-color: #fff;
+    font-size: 15px;
+    font-family: var(--font-main);
+    color: var(--color-text);
+    outline: none;
+}
+
 .filters {
     display: flex;
     justify-content: center;
