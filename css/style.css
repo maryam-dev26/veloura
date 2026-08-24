@@ -5,8 +5,8 @@
 }
 
 :root {
-    --color-primary:#CDBBC7;
-    --color-secondary: #D6C8D5;
+    --color-primary: #D6C8D5;
+    --color-secondary: #CDBBC7;
     --color-background: #EADDE1;
     --color-text: #3D3430;
 
@@ -121,6 +121,12 @@ button:hover {
 #shop h2 {
     text-align: center;
     margin-bottom: var(--spacing-lg);
+}
+
+.filters button.active {
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    transform: translateY(-2px);
 }
 footer {
     margin-top: var(--spacing-lg);

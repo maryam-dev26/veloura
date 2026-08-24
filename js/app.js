@@ -35,17 +35,10 @@ const products = [
         category: "Shoes",
         price: 2490,
         description: "Comfortable everyday sneakers with a clean, versatile design.",
-        image: "assets/images/sneakers.jpg",
+        image: "assets/images/shoes.jpg",
         rating: 4.8
     }
 ]
-
-filterButtons.forEach(button => {
-    button.addEventListener("click", () => {
-        activeCategory = button.dataset.category
-        renderProducts(getFilteredProducts())
-    })
-})
 
 
 function createProductCard(product) {
@@ -76,5 +69,19 @@ const productGrid = document.querySelector("#product-grid")
 
 productGrid.innerHTML = productCards.join("")
 }
+
+filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        activeCategory = button.dataset.category
+
+        filterButtons.forEach(btn => {
+            btn.classList.remove("active")
+    })
+    button.classList.add("active")
+        
+        renderProducts(getFilteredProducts())
+    })
+})
+
 
 renderProducts(getFilteredProducts())
