@@ -1,7 +1,10 @@
 let activeCategory = "all"
 let searchQuery = ""
+let sortOption = "default"
+
 const searchInput = document.querySelector("#search-input")
 const filterButtons = document.querySelectorAll(".filters button")
+const sortSelect = document.querySelector("#sort-select")
 
 const products = [
     {
@@ -60,12 +63,31 @@ searchInput.addEventListener("input", () => {
      renderProducts(getFilteredProducts())
 })
 
+sortSelect.addEventListener("change", () => {
+    sortOption = sortSelect.value
+    renderProducts(getFilteredProducts())
+})
+
 function getFilteredProducts () {
-    return products.filter(product => {
+    const filtered = products.filter(product => {
         const matchesCategory = activeCategory === "all" || product.category === activeCategory
         const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase())
         return matchesCategory && matchesSearch
+
     })
+
+    const sorted = [...filtered]
+    if (sortOption === "price-low") {
+        sorted.sort((a, b) => a.price - b.price)
+    } else if (sortOption === "price-high") {
+        sorted.sort((a, b) => b.price - a.price)
+    } else if (sortOption === "name-az") {
+        sorted.sort((a,b) => a.name.localeCompare(b.name)) 
+    } else if (sortOption === "name-za") {
+        sorted.sort((a, b) => b.name.localeCompare(a.name))
+    }
+       
+    return sorted
 }
 
 function renderProducts(productList) {
