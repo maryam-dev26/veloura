@@ -2,6 +2,7 @@ let activeCategory = "all"
 let searchQuery = ""
 let sortOption = "default"
 
+const productGrid = document.querySelector("#product-grid")
 const searchInput = document.querySelector("#search-input")
 const filterButtons = document.querySelectorAll(".filters button")
 const sortSelect = document.querySelector("#sort-select")
@@ -48,7 +49,7 @@ const products = [
 
 function createProductCard(product) {
     return `
-        <article class="card">
+        <article class="card" data-id="${product.id}">
             <img src="${product.image}" alt="${product.name}" />
             <h3>${product.name}</h3>
             <p>${product.description}</p>
@@ -90,20 +91,6 @@ function getFilteredProducts () {
     return sorted
 }
 
-function renderProducts(productList) {
-const productGrid = document.querySelector("#product-grid")
-
-    if(productList.length === 0) {
-        productGrid.innerHTML = "<p class ='no-result'> No product found</p>"
-        return
-    }
-
-const productCards = productList.map(product => {
-    return createProductCard(product)
-})
-
-productGrid.innerHTML = productCards.join("")
-}
 
 filterButtons.forEach(button => {
     button.addEventListener("click", () => {
@@ -118,5 +105,56 @@ filterButtons.forEach(button => {
     })
 })
 
+function renderProducts(productList) {
 
-renderProducts(getFilteredProducts())
+    if(productList.length === 0) {
+        productGrid.innerHTML = "<p class ='no-result'> No product found</p>"
+        return
+    }
+
+const productCards = productList.map(product => {
+    return createProductCard(product)
+})
+
+productGrid.innerHTML = productCards.join("")
+}
+
+productGrid.addEventListener("click", (event) => {
+    const card = event.target.closest(".card")
+
+    if (!card) return
+    const id = card.dataset.id
+    location.hash = `#/product/${id}`
+})
+
+function renderProductDetail (product) {
+    productGrid.innerHTML = `
+    <div class="product-detail">
+       <img src="${product.image}" alt="${product.name}" />
+       <div class="product-detail-info">
+        <h3>${product.name}</h3>
+        <p>${product.description}</p>
+        <p class="price">৳ ${product.price}</p>
+        <button>Add to Cart</button>
+        <a href="#/shop">← Back to shop</a>
+        </div>
+    </div>
+    `
+}
+
+function handleRouteChange () {
+    
+    const hash = location.hash
+
+    if (hash.startsWith("#/product")) {
+        const id = hash.split("/")[2]
+        const product = products.find(p => p.id === Number(id))
+        renderProductDetail(product)
+    } else {
+        renderProducts(getFilteredProducts())
+    }
+}
+
+window.addEventListener("hashchange", handleRouteChange)
+
+handleRouteChange()
