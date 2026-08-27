@@ -19,7 +19,6 @@
     --spacing-lg: 32px;
 }
 
-
 body {
     font-family: var(--font-main);
     background-color: var(--color-background);
@@ -50,7 +49,6 @@ nav a:hover {
     color: var(--color-primary);
 }
 
-
 #home {
     padding: 80px var(--spacing-lg);
     text-align: center;
@@ -68,6 +66,7 @@ nav a:hover {
     margin-bottom: var(--spacing-md);
 }
 
+
 button {
     border: none;
     padding: 10px 20px;
@@ -77,9 +76,10 @@ button {
     font-family: var(--font-main);
     font-weight: 600;
     cursor: pointer;
+
     transition:
-        transform 0.3s ease,
-        background-color 0.3s ease;
+    transform 0.3s ease,
+    background-color 0.3s ease;
 }
 
 button:hover {
@@ -96,63 +96,10 @@ button:hover {
     margin-bottom: var(--spacing-lg);
 }
 
-#product-grid {
-    padding: var(--spacing-lg);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-}
-
-.card {
-    padding: var(--spacing-md);
-    background-color: var(--color-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(51, 44, 43, 0.08);
-}
-
-.card img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    display: block;
-    border-radius: 4px;
-}
-
-.card h3 {
-    margin-top: var(--spacing-md);
-    margin-bottom: var(--spacing-sm);
-}
-
-.card p {
-    line-height: 1.5;
-    color: var(--color-muted);
-}
-
-.card .price {
-    color: var(--color-text);
-    font-weight: 700;
-    margin-bottom: var(--spacing-sm);
-}
-
-.product-controls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
-}
-
 .search-box {
     width: 100%;
     max-width: 450px;
+    margin: 0 auto var(--spacing-md);
     position: relative;
 }
 
@@ -169,12 +116,16 @@ button:hover {
 .search-box input {
     width: 100%;
     padding: 14px 18px 14px 45px;
+
     border: 1px solid var(--color-border);
     border-radius: 50px;
+
     background-color: #fff;
-    font-size: 15px;
-    font-family: var(--font-main);
     color: var(--color-text);
+
+    font-family: var(--font-main);
+    font-size: 15px;
+
     outline: none;
 }
 
@@ -210,16 +161,26 @@ button:hover {
 }
 
 #sort-select {
+    display: block;
+    margin: 0 auto var(--spacing-lg);
+
     padding: 10px 36px 10px 14px;
+
     border: 1px solid var(--color-border);
     border-radius: 6px;
+
     background-color: var(--color-background);
     color: var(--color-text);
+
     font-family: var(--font-main);
     font-size: 0.95rem;
+
     cursor: pointer;
     outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+    transition:
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
 #sort-select:hover,
@@ -231,27 +192,181 @@ button:hover {
     box-shadow: 0 0 0 3px rgba(185, 143, 138, 0.15);
 }
 
-.product-detail {
-    display: flex;
-    gap: var(--spacing-lg);
+
+#product-grid {
     padding: var(--spacing-lg);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+
+.card {
+    padding: var(--spacing-md);
+
+    background-color: var(--color-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(51, 44, 43, 0.08);
+}
+
+.card img {
+    width: 100%;
+    height: 300px;
+
+    object-fit: cover;
+    display: block;
+
+    border-radius: 4px;
+}
+
+.card h3 {
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.card p {
+    line-height: 1.5;
+    color: var(--color-muted);
+}
+
+.card .price {
+    color: var(--color-text);
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+}
+
+.no-result {
+    padding: var(--spacing-lg);
+    color: var(--color-muted);
+}
+
+
+#product-grid.detail-view {
+    display: block;
+    padding: var(--spacing-lg);
+}
+
+.product-detail {
+    max-width: 1000px;
+    margin: var(--spacing-lg) auto;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 48px;
+    align-items: center;
+}
+
+.product-detail > img {
+    width: 100%;
+    height: 500px;
+
+    object-fit: cover;
+
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+}
+
+.product-detail-info {
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
 }
 
-.product-detail img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    display: block;
-    border-radius: 4px;
+.product-detail-info h3 {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.product-detail-info p {
+    line-height: 1.7;
+    color: var(--color-muted);
+    margin-bottom: var(--spacing-md);
+}
+
+.product-detail-info .price {
+    color: var(--color-text);
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.product-detail-info button {
+    margin-bottom: var(--spacing-md);
+}
+
+.product-detail-info a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 600;
+
+    transition: color 0.3s ease;
+}
+
+.product-detail-info a:hover {
+    color: var(--color-primary);
 }
 
 footer {
     margin-top: var(--spacing-lg);
     padding: var(--spacing-lg);
+
     text-align: center;
+
     background-color: var(--color-secondary);
     color: var(--color-text);
 }
 
+@media (max-width: 900px) {
+    #product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .product-detail {
+        grid-template-columns: 1fr;
+        max-width: 600px;
+    }
+
+    .product-detail > img {
+        height: 450px;
+    }
+}
+
+
+@media (max-width: 600px) {
+    #home h1 {
+        font-size: 2.2rem;
+    }
+
+    #product-grid {
+        grid-template-columns: 1fr;
+        padding: var(--spacing-md);
+    }
+
+    .filters {
+        flex-wrap: wrap;
+        padding: 0 var(--spacing-md);
+    }
+
+    .product-detail {
+        padding: var(--spacing-md);
+        margin: var(--spacing-md) auto;
+    }
+
+    .product-detail > img {
+        height: 350px;
+    }
+
+    .product-detail-info h3 {
+        font-size: 1.6rem;
+    }
+}
 

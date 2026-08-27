@@ -106,6 +106,7 @@ filterButtons.forEach(button => {
 })
 
 function renderProducts(productList) {
+    productGrid.classList.remove("detail-view")
 
     if(productList.length === 0) {
         productGrid.innerHTML = "<p class ='no-result'> No product found</p>"
@@ -125,9 +126,12 @@ productGrid.addEventListener("click", (event) => {
     if (!card) return
     const id = card.dataset.id
     location.hash = `#/product/${id}`
+
 })
 
 function renderProductDetail (product) {
+    productGrid.classList.add("detail-view")
+    
     productGrid.innerHTML = `
     <div class="product-detail">
        <img src="${product.image}" alt="${product.name}" />
@@ -142,18 +146,23 @@ function renderProductDetail (product) {
     `
 }
 
-function handleRouteChange () {
-    
+function handleRouteChange () {    
     const hash = location.hash
 
     if (hash.startsWith("#/product")) {
         const id = hash.split("/")[2]
         const product = products.find(p => p.id === Number(id))
+       
+        if (!product) {
+            productGrid.innerHTML = "<p>Product not found.</p>"
+            return
+        }
         renderProductDetail(product)
     } else {
         renderProducts(getFilteredProducts())
     }
 }
+
 
 window.addEventListener("hashchange", handleRouteChange)
 
