@@ -1,11 +1,13 @@
 let activeCategory = "all"
 let searchQuery = ""
 let sortOption = "default"
+let cart = []
 
 const productGrid = document.querySelector("#product-grid")
 const searchInput = document.querySelector("#search-input")
 const filterButtons = document.querySelectorAll(".filters button")
 const sortSelect = document.querySelector("#sort-select")
+const cartCount = document.querySelector("#cart-count")
 
 const products = [
     {
@@ -54,10 +56,25 @@ function createProductCard(product) {
             <h3>${product.name}</h3>
             <p>${product.description}</p>
             <p class="price">৳ ${product.price}</p>
-            <button>Add to Cart</button>
+            <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
         </article>
     `
 }
+
+productGrid.addEventListener("click", (event) => {
+    const addButton = event.target.closest(".add-to-cart")
+    if (addButton) {      
+    const id = Number(addButton.dataset.id)
+    addToCart(id)
+    return
+    }
+    
+    const card = event.target.closest(".card")
+
+    if (!card) return
+    const id = card.dataset.id
+    location.hash = `#/product/${id}`
+})
 
 searchInput.addEventListener("input", () => {
      searchQuery = searchInput.value
@@ -71,10 +88,9 @@ sortSelect.addEventListener("change", () => {
 
 function getFilteredProducts () {
     const filtered = products.filter(product => {
-        const matchesCategory = activeCategory === "all" || product.category === activeCategory
-        const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase())
-        return matchesCategory && matchesSearch
-
+    const matchesCategory = activeCategory === "all" || product.category === activeCategory
+    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesCategory && matchesSearch
     })
 
     const sorted = [...filtered]
@@ -90,7 +106,6 @@ function getFilteredProducts () {
        
     return sorted
 }
-
 
 filterButtons.forEach(button => {
     button.addEventListener("click", () => {
@@ -120,15 +135,6 @@ const productCards = productList.map(product => {
 productGrid.innerHTML = productCards.join("")
 }
 
-productGrid.addEventListener("click", (event) => {
-    const card = event.target.closest(".card")
-
-    if (!card) return
-    const id = card.dataset.id
-    location.hash = `#/product/${id}`
-
-})
-
 function renderProductDetail (product) {
     productGrid.classList.add("detail-view")
     
@@ -139,7 +145,7 @@ function renderProductDetail (product) {
         <h3>${product.name}</h3>
         <p>${product.description}</p>
         <p class="price">৳ ${product.price}</p>
-        <button>Add to Cart</button>
+        <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
         <a href="#/shop">← Back to shop</a>
         </div>
     </div>
@@ -163,6 +169,31 @@ function handleRouteChange () {
     }
 }
 
+function addToCart (productId) {
+    const existingItem = cart.find(item => item.productId === productId)
+
+    if (existingItem) {
+        existingItem.quantity += 1
+    } else {
+        cart.push ({productId: productId, quantity: 1})
+    }
+
+    updateCartCount()
+}
+
+/* basic structure of reduce
+array.reduce((accumulator, currentValue) => {
+    // calculation
+}, initialValue)
+*/
+
+function updateCartCount () {
+    const totalQuantity = cart.reduce((total, item) => {
+        return total + item.quantity
+    }, 0)
+
+    cartCount.textContent = totalQuantity
+}
 
 window.addEventListener("hashchange", handleRouteChange)
 
