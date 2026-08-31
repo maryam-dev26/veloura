@@ -34,8 +34,8 @@ header {
 nav {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: var(--spacing-lg);
+    padding: 0 24px;
 }
 
 nav a {
@@ -594,4 +594,20 @@ footer {
         max-width: 100%;
     }
 }
+#cart-button {
+    margin-left: auto;
+    
+    min-width: 70px;
+    padding: 10px 16px;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    background-color: transparent;
+    color: var(--color-text);
+
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+}
