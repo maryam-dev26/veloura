@@ -8,6 +8,10 @@ const searchInput = document.querySelector("#search-input")
 const filterButtons = document.querySelectorAll(".filters button")
 const sortSelect = document.querySelector("#sort-select")
 const cartCount = document.querySelector("#cart-count")
+const cartButton = document.querySelector("#cart-button")
+const cartOverlay = document.querySelector("#cart-overlay")
+const cartDrawer = document.querySelector("#cart-drawer")
+const closeCartBtn = document.querySelector("#close-cart")
 
 const products = [
     {
@@ -65,7 +69,7 @@ productGrid.addEventListener("click", (event) => {
     const addButton = event.target.closest(".add-to-cart")
     if (addButton) {      
     const id = Number(addButton.dataset.id)
-    addToCart(id)
+    addToCart(id, addButton)
     return
     }
     
@@ -169,7 +173,7 @@ function handleRouteChange () {
     }
 }
 
-function addToCart (productId) {
+function addToCart (productId, button) {
     const existingItem = cart.find(item => item.productId === productId)
 
     if (existingItem) {
@@ -179,6 +183,10 @@ function addToCart (productId) {
     }
 
     updateCartCount()
+
+    button.textContent = "Added ✓"
+
+    renderCart()
 }
 
 /* basic structure of reduce
@@ -194,6 +202,98 @@ function updateCartCount () {
 
     cartCount.textContent = totalQuantity
 }
+
+cartButton.addEventListener("click", () => {
+    cartDrawer.classList.add("open")
+    cartOverlay.classList.add("active")
+})
+
+closeCartBtn.addEventListener("click", () => {
+    cartDrawer.classList.remove("open")
+    cartOverlay.classList.remove("active")
+})
+
+cartOverlay.addEventListener("click", () => {
+    cartDrawer.classList.remove("open")
+    cartOverlay.classList.remove("active")
+})
+
+
+function renderCart () {
+    const cartItems = document.querySelector("#cart-items")
+    if (cart.length === 0) {
+        cartItems.innerHTML = "<p>Your cart is empty.</p>"
+    } else {
+        const itemsHtml = cart.map(item => {
+            const product = products.find(p => p.id === item.productId)
+             return `
+                <div class="cart-item" data-id="${product.id}">
+                    <img src="${product.image}" alt="${product.name}" />
+                    <div class="cart-item-info">
+                        <h4>${product.name}</h4>
+                        <p>৳ ${product.price}</p>
+                        <div class="quantity-controls">
+                            <button class="decrease-btn">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="increase-btn">+</button>
+                        </div>
+                    </div>
+                    <button class="remove-btn">🗑</button>
+                </div>
+            `
+        }).join("")
+
+        cartItems.innerHTML = itemsHtml
+    }
+
+    updateCartTotal()
+}
+
+function updateCartTotal () {
+    const total = cart.reduce((sum, item) =>{
+        const product = products.find(p => p.id === item.productId)
+        return sum + (product.price * item.quantity)
+    }, 0)
+
+    document.querySelector("#cart-total").textContent = total
+    updateCartCount()
+}
+
+function increaseQuantity(productId) {
+    const item = cart.find(item => item.productId === productId);
+    item.quantity += 1;
+    renderCart();
+}
+
+function decreaseQuantity(productId) {
+    const item = cart.find(item => item.productId === productId);
+    item.quantity -= 1;
+
+    if (item.quantity <= 0) {
+        removeFromCart(productId);
+        return;
+    }
+    renderCart();
+}
+
+function removeFromCart (productId) {
+    cart = cart.filter(item => item.productId !== productId)
+    renderCart()
+}
+
+document.querySelector("#cart-items").addEventListener("click", (event) => {
+    const cartItem = event.target.closest(".cart-item")
+    if (!cartItem) return
+    const productId = Number(cartItem.dataset.id)
+
+    if (event.target.closest(".increase-btn")) {
+        increaseQuantity(productId)
+    } else if (event.target.closest(".decrease-btn")) {
+        decreaseQuantity(productId)
+    } else if (event.target.closest(".remove-btn")) {
+        removeFromCart(productId)
+    }
+})
 
 window.addEventListener("hashchange", handleRouteChange)
 

@@ -14,7 +14,9 @@
         <nav>
             <a href="#home">Home</a>
             <a href="#shop">Shop </a>
-            <span class="cart-icon">🛒 <span id="cart-count">0</span></span>
+            <button id="cart-button" class="cart-icon">
+                🛒 <span id="cart-count">0</span>
+            </button>
         </nav>
     </header>
 
@@ -62,6 +64,21 @@
         </section>
 
     </main>
+
+    <div id="cart-overlay"></div>
+
+    <aside id="cart-drawer">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button id="close-cart">✕</button>
+        </div>
+
+        <div id="cart-items"></div>
+
+        <div class="cart-footer">
+            <p>Total: <span id="cart-total">৳ 0</span></p>
+        </div>
+    </aside>
 
     <footer>
         <p>&copy; 2026 Veloura. All rights reserved.</p>
