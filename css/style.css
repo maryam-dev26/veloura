@@ -202,6 +202,7 @@ button:hover {
 
 
 .card {
+    position: relative;
     padding: var(--spacing-md);
 
     background-color: var(--color-secondary);
@@ -610,4 +611,99 @@ footer {
 
     border: 1px solid var(--color-border);
     border-radius: 8px;
+}
+.wishlist-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+
+    width: 36px;
+    height: 36px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background-color: var(--color-background);
+    color: var(--color-muted);
+
+    font-size: 18px;
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+.wishlist-btn:hover {
+    color: var(--color-primary);
+    background-color: var(--color-secondary);
+    transform: scale(1.08);
+}
+
+#wishlist-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(51, 44, 43, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 999;
+}
+
+#wishlist-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+#wishlist-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 380px;
+    max-width: 90%;
+    height: 100vh;
+    background-color: var(--color-background);
+    border-left: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+#wishlist-drawer.open {
+    transform: translateX(0);
+}
+
+#wishlist-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-md);
+}
+
+.wishlist-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.wishlist-item img {
+    width: 80px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+}
+
+#wishlist-items > p {
+    text-align: center;
+    color: var(--color-muted);
+    padding: 40px 0;
 }

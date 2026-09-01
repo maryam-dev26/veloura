@@ -2,6 +2,7 @@ let activeCategory = "all"
 let searchQuery = ""
 let sortOption = "default"
 let cart = []
+let wishlist = []
 
 const productGrid = document.querySelector("#product-grid")
 const searchInput = document.querySelector("#search-input")
@@ -12,6 +13,10 @@ const cartButton = document.querySelector("#cart-button")
 const cartOverlay = document.querySelector("#cart-overlay")
 const cartDrawer = document.querySelector("#cart-drawer")
 const closeCartBtn = document.querySelector("#close-cart")
+const wishlistButton = document.querySelector("#wishlist-button")
+const wishlistDrawer = document.querySelector("#wishlist-drawer")
+const wishlistOverlay = document.querySelector("#wishlist-overlay")
+const closeWishlistBtn = document.querySelector("#close-wishlist")
 
 const products = [
     {
@@ -162,8 +167,11 @@ const products = [
 
 
 function createProductCard(product) {
+    const isWishlisted = wishlist.includes(product.id)
+    const heartIcon = isWishlisted ? "♥" : "♡"
     return `
         <article class="card" data-id="${product.id}">
+            <button class="wishlist-btn" data-id="${product.id}">${heartIcon}</button>
             <img src="${product.image}" alt="${product.name}" />
             <h3>${product.name}</h3>
             <p>${product.description}</p>
@@ -174,6 +182,12 @@ function createProductCard(product) {
 }
 
 productGrid.addEventListener("click", (event) => {
+    const wishlistBtn = event.target.closest(".wishlist-btn")
+    if (wishlistBtn) {
+        const id = Number(wishlistBtn.dataset.id)
+        toggleWishlist(id)
+        return
+    }
     const addButton = event.target.closest(".add-to-cart")
     if (addButton) {      
     const id = Number(addButton.dataset.id)
@@ -250,10 +264,14 @@ productGrid.innerHTML = productCards.join("")
 function renderProductDetail (product) {
     productGrid.classList.add("detail-view")
     
+    const isWishlisted = wishlist.includes(product.id)
+    const heartIcon = isWishlisted ? "♥" : "♡"
+    
     productGrid.innerHTML = `
     <div class="product-detail">
-       <img src="${product.image}" alt="${product.name}" />
-       <div class="product-detail-info">
+        <button class="wishlist-btn" data-id="${product.id}">${heartIcon}</button>
+        <img src="${product.image}" alt="${product.name}" />
+        <div class="product-detail-info">
         <h3>${product.name}</h3>
         <p>${product.description}</p>
         <p class="price">৳ ${product.price}</p>
@@ -401,6 +419,72 @@ document.querySelector("#cart-items").addEventListener("click", (event) => {
     } else if (event.target.closest(".remove-btn")) {
         removeFromCart(productId)
     }
+})
+
+function toggleWishlist (productId) {
+    if (wishlist.includes(productId)) {
+        wishlist = wishlist.filter(id => id !== productId)
+    } else {
+        wishlist.push(productId)
+    }
+
+    renderProducts(getFilteredProducts())
+    renderWishlist()
+}
+
+wishlistButton.addEventListener("click", () => {
+    wishlistDrawer.classList.add("open")
+    wishlistOverlay.classList.add("active")
+})
+
+closeWishlistBtn.addEventListener("click", () => {
+    wishlistDrawer.classList.remove("open")
+    wishlistOverlay.classList.remove("active")
+})
+
+wishlistOverlay.addEventListener("click", () => {
+    wishlistDrawer.classList.remove("open")
+    wishlistOverlay.classList.remove("active")
+})
+
+function renderWishlist() {
+    const wishlistItems = document.querySelector("#wishlist-items")
+
+    if (wishlist.length === 0) {
+        wishlistItems.innerHTML = "<p>Your wishlist is empty.</p>"
+    } else {
+        const itemsHtml = wishlist.map(id => {
+            const product =products.find(p => p.id === id)
+
+            return `
+                <div class="wishlist-item" data-id="${product.id}">
+                    <img src="${product.image}" alt="${product.name}" />
+                    <div>
+                        <h4>${product.name}</h4>
+                        <p>৳ ${product.price}</p>
+                    </div>
+                    <button class="remove-wishlist-btn">✕</button>
+                </div>
+            `
+        }).join("")
+
+        wishlistItems.innerHTML = itemsHtml
+    }
+
+    updateWishlistCount()
+}
+
+function updateWishlistCount() {
+    document.querySelector("#wishlist-count").textContent = wishlist.length
+}
+
+document.querySelector("#wishlist-items").addEventListener("click", (event) => {
+    const removeBtn = event.target.closest(".remove-wishlist-btn")
+    if (!removeBtn) return
+
+    const item = event.target.closest(".wishlist-item")
+    const id = Number(item.dataset.id)
+    toggleWishlist(id) 
 })
 
 window.addEventListener("hashchange", handleRouteChange)
