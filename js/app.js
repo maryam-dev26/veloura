@@ -313,6 +313,7 @@ function addToCart (productId, button) {
     button.textContent = "Added ✓"
 
     renderCart()
+    saveCart()
 }
 
 /* basic structure of reduce
@@ -386,25 +387,28 @@ function updateCartTotal () {
 }
 
 function increaseQuantity(productId) {
-    const item = cart.find(item => item.productId === productId);
-    item.quantity += 1;
-    renderCart();
+    const item = cart.find(item => item.productId === productId)
+    item.quantity += 1
+    renderCart()
+    saveCart()
 }
 
 function decreaseQuantity(productId) {
-    const item = cart.find(item => item.productId === productId);
-    item.quantity -= 1;
+    const item = cart.find(item => item.productId === productId)
+    item.quantity -= 1
 
     if (item.quantity <= 0) {
-        removeFromCart(productId);
-        return;
+        removeFromCart(productId)
+        return
     }
-    renderCart();
+    renderCart()
+    saveCart()
 }
 
 function removeFromCart (productId) {
     cart = cart.filter(item => item.productId !== productId)
     renderCart()
+    saveCart()
 }
 
 document.querySelector("#cart-items").addEventListener("click", (event) => {
@@ -430,6 +434,7 @@ function toggleWishlist (productId) {
 
     renderProducts(getFilteredProducts())
     renderWishlist()
+    saveWishlist()
 }
 
 wishlistButton.addEventListener("click", () => {
@@ -486,6 +491,42 @@ document.querySelector("#wishlist-items").addEventListener("click", (event) => {
     const id = Number(item.dataset.id)
     toggleWishlist(id) 
 })
+
+function saveCart() {
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function loadCart() {
+    try {
+        const saved = localStorage.getItem("cart");
+        if (saved) {
+            cart = JSON.parse(saved);
+        }
+    } catch (error) {
+        cart = [];
+    }
+}
+
+function saveWishlist() {
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+}
+
+function loadWishlist() {
+    try {
+        const saved = localStorage.getItem("wishlist");
+        if (saved) {
+            wishlist = JSON.parse(saved);
+        }
+    } catch (error) {
+        wishlist = [];
+    }
+}
+
+loadCart()
+loadWishlist()
+updateCartCount()
+renderCart()
+renderWishlist()
 
 window.addEventListener("hashchange", handleRouteChange)
 
