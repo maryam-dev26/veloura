@@ -3,6 +3,8 @@ let searchQuery = ""
 let sortOption = "default"
 let cart = []
 let wishlist = []
+let isLoading = false
+let hasError = false
 
 const productGrid = document.querySelector("#product-grid")
 const searchInput = document.querySelector("#search-input")
@@ -182,6 +184,11 @@ function createProductCard(product) {
 }
 
 productGrid.addEventListener("click", (event) => {
+    const retryBtn = event.target.closest("#retry-btn")
+    if (retryBtn) {
+        loadProducts()
+        return
+    }
     const wishlistBtn = event.target.closest(".wishlist-btn")
     if (wishlistBtn) {
         const id = Number(wishlistBtn.dataset.id)
@@ -295,7 +302,7 @@ function handleRouteChange () {
         }
         renderProductDetail(product)
     } else {
-        renderProducts(getFilteredProducts())
+        loadProducts()
     }
 }
 
@@ -493,33 +500,77 @@ document.querySelector("#wishlist-items").addEventListener("click", (event) => {
 })
 
 function saveCart() {
-    localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem("cart", JSON.stringify(cart))
 }
 
 function loadCart() {
     try {
-        const saved = localStorage.getItem("cart");
+        const saved = localStorage.getItem("cart")
         if (saved) {
-            cart = JSON.parse(saved);
+            cart = JSON.parse(saved)
         }
     } catch (error) {
-        cart = [];
+        cart = []
     }
 }
 
 function saveWishlist() {
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    localStorage.setItem("wishlist", JSON.stringify(wishlist))
 }
 
 function loadWishlist() {
     try {
-        const saved = localStorage.getItem("wishlist");
+        const saved = localStorage.getItem("wishlist")
         if (saved) {
-            wishlist = JSON.parse(saved);
+            wishlist = JSON.parse(saved)
         }
     } catch (error) {
-        wishlist = [];
+        wishlist = []
     }
+}
+
+function fetchProducts () {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const success = Math.random() > 0.3
+
+            if (success) {
+                resolve(products)
+            } else {
+                reject("Failed to load products. Please try again.")
+            }
+        }, 1500)
+    })
+}
+
+function renderLoadingState() {
+    productGrid.innerHTML = `<div class="spinner"></div>`
+}
+
+function renderErrorState(message) {
+    productGrid.innerHTML = `
+        <div class="error-state">
+            <p>${message}</p>
+            <button id="retry-btn">Retry</button>
+        </div>
+    `
+}
+
+function loadProducts() {
+    isLoading = true
+    hasError = false
+    renderLoadingState()
+
+    fetchProducts()
+        .then((data) => {
+            isLoading = false
+            renderProducts(getFilteredProducts())
+        })
+        .catch((error) => {
+            isLoading = false
+            hasError = true
+            renderErrorState(error)
+        })
 }
 
 loadCart()
