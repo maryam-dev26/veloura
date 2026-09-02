@@ -544,7 +544,11 @@ function fetchProducts () {
 }
 
 function renderLoadingState() {
-    productGrid.innerHTML = `<div class="spinner"></div>`
+    productGrid.innerHTML = `
+    <div class="loading-state">
+        <div class="spinner"></div>
+    </div>
+    `
 }
 
 function renderErrorState(message) {
