@@ -20,8 +20,8 @@ const wishlistDrawer = document.querySelector("#wishlist-drawer")
 const wishlistOverlay = document.querySelector("#wishlist-overlay")
 const closeWishlistBtn = document.querySelector("#close-wishlist")
 
-const products = [
-    {
+let products = [
+   /* {
         id: 1,
         name: "Leather Bag",
         category: "Bags",
@@ -165,6 +165,7 @@ const products = [
         image: "assets/images/strappy-sandals.jpg",
         rating: 4.2
     }
+        */
 ]
 
 
@@ -529,20 +530,6 @@ function loadWishlist() {
     }
 }
 
-function fetchProducts () {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            const success = Math.random() > 0.3
-
-            if (success) {
-                resolve(products)
-            } else {
-                reject("Failed to load products. Please try again.")
-            }
-        }, 1500)
-    })
-}
-
 function renderLoadingState() {
     productGrid.innerHTML = `
     <div class="loading-state">
@@ -560,28 +547,54 @@ function renderErrorState(message) {
     `
 }
 
-function loadProducts() {
+async function loadProducts() {
     isLoading = true
     hasError = false
     renderLoadingState()
 
-    fetchProducts()
-        .then((data) => {
-            isLoading = false
-            renderProducts(getFilteredProducts())
-        })
-        .catch((error) => {
-            isLoading = false
-            hasError = true
-            renderErrorState(error)
-        })
+    try {
+        products = await fetchProducts()
+        renderProducts(getFilteredProducts())
+        renderCart()
+        renderWishlist()
+    } catch (error) {
+        hasError = true
+        renderErrorState(error.message)
+    } finally {
+        isLoading = false
+    }
 }
+
+async function fetchProducts() {
+    const response = await fetch("https://dummyjson.com/products")
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch products")
+    }
+
+
+    const data = await response.json()
+
+    const velouraProducts = data.products.map((apiProduct) => {
+        return {
+            id: apiProduct.id,
+            name: apiProduct.title,
+            category: apiProduct.category,
+            price: apiProduct.price,
+            description: apiProduct.description,
+            image: apiProduct.thumbnail,
+            rating: apiProduct.rating
+        }
+    })
+
+    return velouraProducts
+}
+
+
 
 loadCart()
 loadWishlist()
 updateCartCount()
-renderCart()
-renderWishlist()
 
 window.addEventListener("hashchange", handleRouteChange)
 
