@@ -169,20 +169,6 @@ let products = [
 ]
 
 
-function createProductCard(product) {
-    const isWishlisted = wishlist.includes(product.id)
-    const heartIcon = isWishlisted ? "♥" : "♡"
-    return `
-        <article class="card" data-id="${product.id}">
-            <button class="wishlist-btn" data-id="${product.id}">${heartIcon}</button>
-            <img src="${product.image}" alt="${product.name}" />
-            <h3>${product.name}</h3>
-            <p>${product.description}</p>
-            <p class="price">৳ ${product.price}</p>
-            <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
-        </article>
-    `
-}
 
 productGrid.addEventListener("click", (event) => {
     const retryBtn = event.target.closest("#retry-btn")
@@ -220,26 +206,6 @@ sortSelect.addEventListener("change", () => {
     renderProducts(getFilteredProducts())
 })
 
-function getFilteredProducts () {
-    const filtered = products.filter(product => {
-    const matchesCategory = activeCategory === "all" || product.category === activeCategory
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesCategory && matchesSearch
-    })
-
-    const sorted = [...filtered]
-    if (sortOption === "price-low") {
-        sorted.sort((a, b) => a.price - b.price)
-    } else if (sortOption === "price-high") {
-        sorted.sort((a, b) => b.price - a.price)
-    } else if (sortOption === "name-az") {
-        sorted.sort((a,b) => a.name.localeCompare(b.name)) 
-    } else if (sortOption === "name-za") {
-        sorted.sort((a, b) => b.name.localeCompare(a.name))
-    }
-       
-    return sorted
-}
 
 filterButtons.forEach(button => {
     button.addEventListener("click", () => {
@@ -254,75 +220,8 @@ filterButtons.forEach(button => {
     })
 })
 
-function renderProducts(productList) {
-    productGrid.classList.remove("detail-view")
 
-    if(productList.length === 0) {
-        productGrid.innerHTML = "<p class ='no-result'> No product found</p>"
-        return
-    }
 
-const productCards = productList.map(product => {
-    return createProductCard(product)
-})
-
-productGrid.innerHTML = productCards.join("")
-}
-
-function renderProductDetail (product) {
-    productGrid.classList.add("detail-view")
-    
-    const isWishlisted = wishlist.includes(product.id)
-    const heartIcon = isWishlisted ? "♥" : "♡"
-    
-    productGrid.innerHTML = `
-    <div class="product-detail">
-        <button class="wishlist-btn" data-id="${product.id}">${heartIcon}</button>
-        <img src="${product.image}" alt="${product.name}" />
-        <div class="product-detail-info">
-        <h3>${product.name}</h3>
-        <p>${product.description}</p>
-        <p class="price">৳ ${product.price}</p>
-        <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
-        <a href="#/shop">← Back to shop</a>
-        </div>
-    </div>
-    `
-}
-
-function handleRouteChange () {    
-    const hash = location.hash
-
-    if (hash.startsWith("#/product")) {
-        const id = hash.split("/")[2]
-        const product = products.find(p => p.id === Number(id))
-       
-        if (!product) {
-            productGrid.innerHTML = "<p>Product not found.</p>"
-            return
-        }
-        renderProductDetail(product)
-    } else {
-        loadProducts()
-    }
-}
-
-function addToCart (productId, button) {
-    const existingItem = cart.find(item => item.productId === productId)
-
-    if (existingItem) {
-        existingItem.quantity += 1
-    } else {
-        cart.push ({productId: productId, quantity: 1})
-    }
-
-    updateCartCount()
-
-    button.textContent = "Added ✓"
-
-    renderCart()
-    saveCart()
-}
 
 /* basic structure of reduce
 array.reduce((accumulator, currentValue) => {
@@ -330,13 +229,7 @@ array.reduce((accumulator, currentValue) => {
 }, initialValue)
 */
 
-function updateCartCount () {
-    const totalQuantity = cart.reduce((total, item) => {
-        return total + item.quantity
-    }, 0)
 
-    cartCount.textContent = totalQuantity
-}
 
 cartButton.addEventListener("click", () => {
     cartDrawer.classList.add("open")
@@ -354,71 +247,6 @@ cartOverlay.addEventListener("click", () => {
 })
 
 
-function renderCart () {
-    const cartItems = document.querySelector("#cart-items")
-    if (cart.length === 0) {
-        cartItems.innerHTML = "<p>Your cart is empty.</p>"
-    } else {
-        const itemsHtml = cart.map(item => {
-            const product = products.find(p => p.id === item.productId)
-             return `
-                <div class="cart-item" data-id="${product.id}">
-                    <img src="${product.image}" alt="${product.name}" />
-                    <div class="cart-item-info">
-                        <h4>${product.name}</h4>
-                        <p>৳ ${product.price}</p>
-                        <div class="quantity-controls">
-                            <button class="decrease-btn">-</button>
-                            <span>${item.quantity}</span>
-                            <button class="increase-btn">+</button>
-                        </div>
-                    </div>
-                    <button class="remove-btn">🗑</button>
-                </div>
-            `
-        }).join("")
-
-        cartItems.innerHTML = itemsHtml
-    }
-
-    updateCartTotal()
-}
-
-function updateCartTotal () {
-    const total = cart.reduce((sum, item) =>{
-        const product = products.find(p => p.id === item.productId)
-        return sum + (product.price * item.quantity)
-    }, 0)
-
-    document.querySelector("#cart-total").textContent = total
-    updateCartCount()
-}
-
-function increaseQuantity(productId) {
-    const item = cart.find(item => item.productId === productId)
-    item.quantity += 1
-    renderCart()
-    saveCart()
-}
-
-function decreaseQuantity(productId) {
-    const item = cart.find(item => item.productId === productId)
-    item.quantity -= 1
-
-    if (item.quantity <= 0) {
-        removeFromCart(productId)
-        return
-    }
-    renderCart()
-    saveCart()
-}
-
-function removeFromCart (productId) {
-    cart = cart.filter(item => item.productId !== productId)
-    renderCart()
-    saveCart()
-}
-
 document.querySelector("#cart-items").addEventListener("click", (event) => {
     const cartItem = event.target.closest(".cart-item")
     if (!cartItem) return
@@ -432,18 +260,6 @@ document.querySelector("#cart-items").addEventListener("click", (event) => {
         removeFromCart(productId)
     }
 })
-
-function toggleWishlist (productId) {
-    if (wishlist.includes(productId)) {
-        wishlist = wishlist.filter(id => id !== productId)
-    } else {
-        wishlist.push(productId)
-    }
-
-    renderProducts(getFilteredProducts())
-    renderWishlist()
-    saveWishlist()
-}
 
 wishlistButton.addEventListener("click", () => {
     wishlistDrawer.classList.add("open")
@@ -460,36 +276,6 @@ wishlistOverlay.addEventListener("click", () => {
     wishlistOverlay.classList.remove("active")
 })
 
-function renderWishlist() {
-    const wishlistItems = document.querySelector("#wishlist-items")
-
-    if (wishlist.length === 0) {
-        wishlistItems.innerHTML = "<p>Your wishlist is empty.</p>"
-    } else {
-        const itemsHtml = wishlist.map(id => {
-            const product =products.find(p => p.id === id)
-
-            return `
-                <div class="wishlist-item" data-id="${product.id}">
-                    <img src="${product.image}" alt="${product.name}" />
-                    <div>
-                        <h4>${product.name}</h4>
-                        <p>৳ ${product.price}</p>
-                    </div>
-                    <button class="remove-wishlist-btn">✕</button>
-                </div>
-            `
-        }).join("")
-
-        wishlistItems.innerHTML = itemsHtml
-    }
-
-    updateWishlistCount()
-}
-
-function updateWishlistCount() {
-    document.querySelector("#wishlist-count").textContent = wishlist.length
-}
 
 document.querySelector("#wishlist-items").addEventListener("click", (event) => {
     const removeBtn = event.target.closest(".remove-wishlist-btn")
@@ -500,9 +286,7 @@ document.querySelector("#wishlist-items").addEventListener("click", (event) => {
     toggleWishlist(id) 
 })
 
-function saveCart() {
-    localStorage.setItem("cart", JSON.stringify(cart))
-}
+
 
 function loadCart() {
     try {
@@ -514,83 +298,6 @@ function loadCart() {
         cart = []
     }
 }
-
-function saveWishlist() {
-    localStorage.setItem("wishlist", JSON.stringify(wishlist))
-}
-
-function loadWishlist() {
-    try {
-        const saved = localStorage.getItem("wishlist")
-        if (saved) {
-            wishlist = JSON.parse(saved)
-        }
-    } catch (error) {
-        wishlist = []
-    }
-}
-
-function renderLoadingState() {
-    productGrid.innerHTML = `
-    <div class="loading-state">
-        <div class="spinner"></div>
-    </div>
-    `
-}
-
-function renderErrorState(message) {
-    productGrid.innerHTML = `
-        <div class="error-state">
-            <p>${message}</p>
-            <button id="retry-btn">Retry</button>
-        </div>
-    `
-}
-
-async function loadProducts() {
-    isLoading = true
-    hasError = false
-    renderLoadingState()
-
-    try {
-        products = await fetchProducts()
-        renderProducts(getFilteredProducts())
-        renderCart()
-        renderWishlist()
-    } catch (error) {
-        hasError = true
-        renderErrorState(error.message)
-    } finally {
-        isLoading = false
-    }
-}
-
-async function fetchProducts() {
-    const response = await fetch("https://dummyjson.com/products")
-
-    if (!response.ok) {
-        throw new Error("Failed to fetch products")
-    }
-
-
-    const data = await response.json()
-
-    const velouraProducts = data.products.map((apiProduct) => {
-        return {
-            id: apiProduct.id,
-            name: apiProduct.title,
-            category: apiProduct.category,
-            price: apiProduct.price,
-            description: apiProduct.description,
-            image: apiProduct.thumbnail,
-            rating: apiProduct.rating
-        }
-    })
-
-    return velouraProducts
-}
-
-
 
 loadCart()
 loadWishlist()
