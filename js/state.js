@@ -1,40 +1,44 @@
-export let activeCategory = "all"
-export let searchQuery = ""
-export let sortOption = "default"
-export let cart = []
-export let wishlist = []
-export let isLoading = false
-export let hasError = false
-export let products = []
+export const state = {
+    products: [],
+    cart: [],
+    wishlist: [],
+    filters: {
+        activeCategory: "all",
+        searchQuery: "",
+        sortOption: "default"
+    },
+    isLoading: false,
+    hasError: false
+}
 
 export function setActiveCategory(value) {
-    activeCategory = value
+    state.filters.activeCategory = value
 }
 
 export function setSearchQuery(value) {
-    searchQuery = value
+    state.filters.searchQuery = value
 }
 
 export function setSortOption(value) {
-    sortOption = value
+    state.filters.sortOption = value
 }
 
 export function setCart(value) {
-    cart = value
+    state.cart = value
 }
 
 export function setWishlist(value) {
-    wishlist = value
+    state.wishlist = value
 }
 
 export function setLoading(value) {
-    isLoading = value
+    state.isLoading = value
 }
 
 export function setError(value) {
-    hasError = value
+    state.hasError = value
 }
 
 export function setProducts(value) {
-    products = value
+    state.products = value
 }

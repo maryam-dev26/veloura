@@ -1,7 +1,9 @@
-import { wishlist, products, activeCategory, searchQuery, sortOption } from "./state.js"
+import {state} from "./state.js"
+
+export const productGrid = document.querySelector("#product-grid")
 
 export function createProductCard(product) {
-    const isWishlisted = wishlist.includes(product.id)
+    const isWishlisted = state.wishlist.includes(product.id)
     const heartIcon = isWishlisted ? "♥" : "♡"
     return `
         <article class="card" data-id="${product.id}">
@@ -9,34 +11,39 @@ export function createProductCard(product) {
             <img src="${product.image}" alt="${product.name}" />
             <h3>${product.name}</h3>
             <p>${product.description}</p>
-            <p class="price">৳ ${product.price}</p>
+            <p class="price">$ ${product.price}</p>
             <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
         </article>
     `
 }
 
 export function getFilteredProducts () {
-    const filtered = products.filter(product => {
-    const matchesCategory = activeCategory === "all" || product.category === activeCategory
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = state.products.filter(product => {
+    const matchesCategory = 
+        state.filters.activeCategory === "all" ||
+        product.category === state.filters.activeCategory
+    const matchesSearch = 
+        product.name
+            .toLowerCase()
+            .includes(state.filters.searchQuery.toLowerCase())
+
     return matchesCategory && matchesSearch
     })
 
     const sorted = [...filtered]
-        if (sortOption === "price-low") {
+        if (state.filters.sortOption === "price-low") {
             sorted.sort((a, b) => a.price - b.price)
-        } else if (sortOption === "price-high") {
+        } else if (state.filters.sortOption === "price-high") {
             sorted.sort((a, b) => b.price - a.price)
-        } else if (sortOption === "name-az") {
+        } else if (state.filters.sortOption === "name-az") {
             sorted.sort((a,b) => a.name.localeCompare(b.name)) 
-        } else if (sortOption === "name-za") {
+        } else if (state.filters.sortOption === "name-za") {
             sorted.sort((a, b) => b.name.localeCompare(a.name))
     }
        
     return sorted
 }
 
-const productGrid = document.querySelector("#product-grid")
 
 export function renderProducts(productList) {
     productGrid.classList.remove("detail-view")
@@ -57,7 +64,7 @@ productGrid.innerHTML = productCards.join("")
 export function renderProductDetail (product) {
     productGrid.classList.add("detail-view")
     
-    const isWishlisted = wishlist.includes(product.id)
+    const isWishlisted = state.wishlist.includes(product.id)
     const heartIcon = isWishlisted ? "♥" : "♡"
     
     productGrid.innerHTML = `
@@ -67,7 +74,7 @@ export function renderProductDetail (product) {
         <div class="product-detail-info">
         <h3>${product.name}</h3>
         <p>${product.description}</p>
-        <p class="price">৳ ${product.price}</p>
+        <p class="price">$ ${product.price}</p>
         <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
         <a href="#/shop">← Back to shop</a>
         </div>
@@ -91,4 +98,8 @@ export function renderErrorState(message) {
             <button id="retry-btn">Retry</button>
         </div>
     `
+}
+
+export function renderNotFound () {
+    productGrid.innerHTML = "<p>Product not found.</p>"
 }
