@@ -72,7 +72,7 @@ export function removeFromCart(productId) {
 
 export function renderCart() {
     if (state.cart.length === 0) {
-        cartItems.innerHTML = "<p>Your cart is empty.</p>"
+        cartItems.innerHTML =  "<p>🛍️<br>Your cart is empty.</p>"
     } else {
         const itemsHtml = state.cart.map(item => {
             const product = state.products.find(

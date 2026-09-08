@@ -29,6 +29,8 @@ const wishlistDrawer = document.querySelector("#wishlist-drawer")
 const wishlistOverlay = document.querySelector("#wishlist-overlay")
 const closeWishlistBtn = document.querySelector("#close-wishlist")
 
+const hamburgerBtn = document.querySelector("#hamburger-btn")
+const navLinks = document.querySelector("#nav-links")
 
 // Product grid events
 
@@ -114,18 +116,16 @@ filterButtons.forEach(button => {
 // Cart drawer
 
 cartButton.addEventListener("click", () => {
-
     cartDrawer.classList.add("open")
     cartOverlay.classList.add("active")
 })
 
-
-closeCartBtn.addEventListener("click", () => {
-
+function closeCart() {
     cartDrawer.classList.remove("open")
     cartOverlay.classList.remove("active")
-})
+}
 
+closeCartBtn.addEventListener("click", closeCart)
 
 cartOverlay.addEventListener("click", () => {
 
@@ -163,17 +163,17 @@ document.querySelector("#cart-items").addEventListener("click", (event) => {
 // Wishlist drawer
 
 wishlistButton.addEventListener("click", () => {
-
     wishlistDrawer.classList.add("open")
     wishlistOverlay.classList.add("active")
 })
 
 
-closeWishlistBtn.addEventListener("click", () => {
-
+function closeWishlist() {  
     wishlistDrawer.classList.remove("open")
     wishlistOverlay.classList.remove("active")
-})
+}
+
+ closeWishlistBtn.addEventListener("click", closeWishlist)
 
 
 wishlistOverlay.addEventListener("click", () => {
@@ -196,6 +196,46 @@ document.querySelector("#wishlist-items").addEventListener("click", (event) => {
     const id = Number(item.dataset.id)
 
     toggleWishlist(id)
+})
+
+
+//hamburger toggle
+
+hamburgerBtn.addEventListener("click", () => {
+    const isOpen = navLinks.classList.toggle("open")
+    hamburgerBtn.setAttribute("aria-expanded", isOpen)
+    document.body.style.overflow = isOpen ? "hidden" : ""
+})
+
+
+//close-on-outside-click
+
+function closeMenu() {
+    navLinks.classList.remove("open")
+    hamburgerBtn.setAttribute("aria-expanded", "false")
+    document.body.style.overflow = ""
+}
+
+document.addEventListener("click", (event) => {
+    const clickedInsideMenu = navLinks.contains(event.target)
+    const clickedHamburger = hamburgerBtn.contains(event.target)
+
+    if (!clickedInsideMenu && !clickedHamburger) {
+        closeMenu()
+    }
+})
+
+document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return
+     if (navLinks.classList.contains("open")) {
+        closeMenu();
+    }
+    if (cartDrawer.classList.contains("open")) {
+        closeCart()
+    }
+     if (wishlistDrawer.classList.contains("open")) {
+        closeWishlist()
+     }
 })
 
 

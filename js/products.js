@@ -49,7 +49,7 @@ export function renderProducts(productList) {
     productGrid.classList.remove("detail-view")
 
     if(productList.length === 0) {
-        productGrid.innerHTML = "<p class ='no-result'> No product found</p>"
+        productGrid.innerHTML = "<p class='no-result'>🔍<br>No products found</p>"
         return
     }
 
@@ -101,5 +101,5 @@ export function renderErrorState(message) {
 }
 
 export function renderNotFound () {
-    productGrid.innerHTML = "<p>Product not found.</p>"
+    productGrid.innerHTML ="<p class='no-result'>🔍<br>No products found</p>"
 }

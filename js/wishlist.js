@@ -23,7 +23,7 @@ export function toggleWishlist(productId) {
 
 export function renderWishlist() {
     if (state.wishlist.length === 0) {
-        wishlistItems.innerHTML = "<p>Your wishlist is empty.</p>"
+        wishlistItems.innerHTML = "<p>🤍<br>Your wishlist is empty.</p>"
     } else {
         const itemsHtml = state.wishlist.map(id => {
             const product = state.products.find(
