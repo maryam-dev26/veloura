@@ -916,28 +916,28 @@ footer {
    Tablet
    ========================= */
 @media (min-width: 768px) {
-
     .hamburger {
         display: none;
     }
 
     .nav-links {
         position: static;
-
         display: flex;
         flex-direction: row;
         align-items: center;
-
-        flex: 1;
-        margin-left: var(--spacing-lg);
-
+        gap: var(--spacing-lg);
         padding: 0;
-
         background-color: transparent;
-
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
+        margin-left: auto;
+    }
+
+    .nav-links a,
+    .nav-links button {
+        width: auto;        
+        padding: 0;         
     }
 
     .nav-pages {
@@ -949,12 +949,13 @@ footer {
 
     .nav-actions {
         display: flex;
+        flex-direction: row;
         align-items: center;
         gap: var(--spacing-md);
-
         margin-left: auto;
     }
-}
+}   
+
 
 
     /* Product Grid */
