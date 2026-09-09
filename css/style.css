@@ -54,6 +54,17 @@ nav a:hover {
     color: var(--color-primary);
 }
 
+.logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-decoration: none;
+    color: var(--color-primary);
+}
+
+.logo:hover {
+    color: var(--color-text);
+}
 
 /* Hamburger */
 
@@ -83,11 +94,11 @@ nav a:hover {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-lg);  
+    gap: var(--spacing-md);  
     
     padding: var(--spacing-lg);
     
-    background-color: var(--color-secondary);
+    background-color: var(--color-background);
     
     opacity: 0;
     visibility: hidden;
@@ -98,7 +109,7 @@ nav a:hover {
         transform 0.3s ease,
         visibility 0.3s ease;
     
-    z-index: 900; /* cart/wishlist drawer (z-index: 1000) থেকেও উপরে, যাতে সবকিছু ঢেকে দেয় */
+    z-index: 900; 
 }
 
 .nav-links.open {
@@ -109,6 +120,19 @@ nav a:hover {
 
 .nav-links a {
     padding: 10px 0;
+    width: 200px;
+    background-color: transparent;
+    color: var(--color-text);
+
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+}
+
+.nav-pages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
 }
 
 
@@ -148,6 +172,26 @@ nav a:hover {
     margin-left: 0;
 }
 
+.nav-links a,
+.nav-links button {
+    width: 200px;       
+    padding: 12px 0;    
+    text-align: center;
+    border-radius: 8px;
+}
+
+.nav-links > * {
+    width: 200px;
+    text-align: center;
+}
+
+.nav-pages,
+.nav-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
 
 /* =========================
    Hero
@@ -294,11 +338,11 @@ select:focus-visible {
     flex-wrap: nowrap;     /* এক লাইনেই রাখো, wrap কোরো না */
     -webkit-overflow-scrolling: touch; /* mobile-এ smooth scroll (iOS) */
 
-    scrollbar-width: none; /* Firefox-এ scrollbar লুকানো (ঐচ্ছিক, cleaner দেখাতে) */
+    scrollbar-width: none;  
 }
 
 .filters::-webkit-scrollbar {
-    display: none; /* Chrome/Safari-এ scrollbar লুকানো (ঐচ্ছিক) */
+    display: none; 
 }
 
 .filters button {
@@ -317,6 +361,12 @@ select:focus-visible {
     transform: translateY(-2px);
 }
 
+@media (min-width: 768px) {
+    .filters {
+        justify-content: center;
+        overflow-x: visible;
+    }
+}
 
 /* Sort */
 
@@ -865,10 +915,7 @@ footer {
 /* =========================
    Tablet
    ========================= */
-
 @media (min-width: 768px) {
-
-    /* Navbar */
 
     .hamburger {
         display: none;
@@ -881,7 +928,8 @@ footer {
         flex-direction: row;
         align-items: center;
 
-        gap: var(--spacing-lg);
+        flex: 1;
+        margin-left: var(--spacing-lg);
 
         padding: 0;
 
@@ -890,13 +938,23 @@ footer {
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
+    }
+
+    .nav-pages {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--spacing-lg);
+    }
+
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
 
         margin-left: auto;
     }
-
-    .nav-links a {
-        padding: 0;
-    }
+}
 
 
     /* Product Grid */
@@ -916,7 +974,7 @@ footer {
     .product-detail > img {
         height: 450px;
     }
-}
+
 
 
 /* =========================
