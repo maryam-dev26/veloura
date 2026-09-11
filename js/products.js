@@ -8,7 +8,7 @@ export function createProductCard(product) {
     return `
         <article class="card" data-id="${product.id}">
             <button class="wishlist-btn" data-id="${product.id}">${heartIcon}</button>
-            <img src="${product.image}" alt="${product.name}" />
+            <img src="${product.image}" alt="${product.name}" loading="lazy" />
             <h3>${product.name}</h3>
             <p>${product.description}</p>
             <p class="price">$ ${product.price}</p>

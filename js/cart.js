@@ -85,7 +85,7 @@ export function renderCart() {
 
                     <div class="cart-item-info">
                         <h4>${product.name}</h4>
-                        <p>৳ ${product.price}</p>
+                        <p>$ ${product.price}</p>
 
                         <div class="quantity-controls">
                             <button class="decrease-btn">-</button>

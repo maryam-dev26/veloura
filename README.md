@@ -1,95 +1,91 @@
 # Veloura
 
-Veloura is a responsive fashion e-commerce website built with
-Vanilla JavaScript.
+A fashion & accessories e-commerce site built with **vanilla JavaScript** — no frameworks, no libraries. Built as a deliberate exercise in understanding *why* frameworks like React exist, by first solving the problems they solve, by hand.
+
+**Live site:** [veloura-ecommerce.netlify.app](https://veloura-ecommerce.netlify.app)
+
 
 ## About
 
-Veloura is a frontend e-commerce project where I practiced
-JavaScript by building real-world features such as product
-filtering, search, sorting, cart, wishlist, API integration,
-LocalStorage persistence, hash-based routing, and responsive
-navigation.
+Veloura started as a 15-milestone learning project: vanilla JS first, React rebuild later. Instead of jumping straight into a framework, the goal was to build every core e-commerce feature — filtering, cart state, routing, async data fetching — from scratch, so that the problems a framework solves are actually *felt* before they're abstracted away.
 
 ## Features
 
-- Product search
-- Category filtering
-- Product sorting
-- Product detail view
-- Shopping cart
-- Wishlist
-- LocalStorage persistence
-- API integration with DummyJSON
-- Loading and error states
-- Responsive layout
-- Mobile navigation
-- Keyboard accessibility
+- 🛍️ Dynamic product catalog fetched from a live API ([DummyJSON](https://dummyjson.com))
+- 🔍 Real-time search, category filtering, and sorting (combinable)
+- 📄 Product detail views with hash-based routing (`#/product/:id`), shareable and refresh-safe
+- 🛒 Cart with quantity controls, running total, and persistent storage
+- 🤍 Wishlist with toggle, dedicated drawer, and persistent storage
+- 📱 Fully responsive, mobile-first layout with an accessible hamburger menu
+- ⏳ Simulated and real loading/error states for async data fetching
+- 💾 Cart and wishlist persist across page reloads via `localStorage`
+- ♿ Accessibility-conscious markup (`aria-*` attributes, focus states, semantic headings)
 
 ## Tech Stack
 
-- HTML
-- CSS
-- JavaScript
-- DummyJSON API
-- LocalStorage
-- ES Modules
+- **HTML5** — semantic markup
+- **CSS3** — custom properties, Flexbox, Grid, mobile-first media queries
+- **JavaScript (ES6+)** — ES Modules, `async/await`, `fetch()`, `localStorage`
+- **[DummyJSON API](https://dummyjson.com)** — live product data
+- **Netlify** — deployment
 
-## How to Run
-
-1. Clone the repository:
-
-https://github.com/maryam-dev26/veloura.git
-
-2. Open the project in VS Code.
-3. Run the project using a local development server such as Live Server.
-4. Open the provided local URL in your browser.
+No frameworks, no build tools, no dependencies — everything here is hand-written vanilla JS.
 
 ## Project Structure
 
-```text
+```
 veloura/
-├── assets/
-│   └── images/
+├── index.html
 ├── css/
 │   └── style.css
 ├── js/
-│   ├── api.js
-│   ├── cart.js
-│   ├── main.js
-│   ├── products.js
-│   ├── router.js
-│   ├── state.js
-│   ├── storage.js
-│   └── wishlist.js
-├── index.html
-└── README.md
+│   ├── state.js       # centralized app state
+│   ├── api.js          # fetches product data from DummyJSON
+│   ├── storage.js      # localStorage persistence for cart/wishlist
+│   ├── products.js     # product rendering, filtering, sorting
+│   ├── cart.js          # cart logic and rendering
+│   ├── wishlist.js      # wishlist logic and rendering
+│   ├── router.js        # hash-based routing + load orchestration
+│   └── main.js           # entry point — wires everything together
+└── assets/
+```
 
-## Module Responsibilities
+The codebase started as a single file and was later refactored into ES Modules, with each file owning one responsibility.
 
-1. main.js — Initializes the application and handles event listeners.
-2. state.js — Manages shared application state.
-3. api.js — Handles product data fetching from the API.
-4. storage.js — Manages LocalStorage for cart and wishlist persistence.
-5. products.js — Handles product rendering, filtering, searching, and sorting.
-6. cart.js — Manages cart functionality and rendering.
-7. wishlist.js — Manages wishlist functionality and rendering.
-8. router.js — Handles hash-based routing and product detail views.
+## Running Locally
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/maryam-dev26/veloura.git
+   cd veloura
+   ```
+2. Open `index.html` with a local server (e.g. VS Code's **Live Server** extension) — this project uses ES Modules, so it won't run correctly by opening the file directly in a browser (`file://`).
+
+No build step, no `npm install` — just serve the folder.
+
+## Screenshots
+
+| Product Grid | Cart Drawer | Mobile View |
+|---|---|---|
+| ![Grid view](./screenshots/grid.png) | ![Cart Drawer](./screenshots/cart.png) | ![Mobile View](./screenshots/mobile.png) |
 
 ## What I Learned
 
-Building Veloura helped me practice and understand:
+This project was less about *building an e-commerce site* and more about understanding, deeply, what problems each piece of JavaScript actually solves.
 
-- DOM manipulation and event handling
-- Event delegation for dynamic elements
-- JavaScript array methods such as `map()`, `filter()`, and `sort()`
-- LocalStorage for persisting cart and wishlist data
-- Async JavaScript with `fetch()` and `async/await`
-- Handling API loading and error states
-- Working with external API data and mapping API responses
-- Hash-based routing for product detail views
-- ES Modules and separation of concerns
-- Centralized state management
-- Responsive, mobile-first design
-- Accessibility basics such as keyboard navigation, focus states, and ARIA attributes
-- Debugging and refactoring a growing JavaScript project
+A few things that stuck:
+
+- **State as the single source of truth.** Every feature — filters, cart, wishlist — follows the same loop: change the data, then re-render everything from it. Never touch the DOM directly. This one idea made cart quantity updates, wishlist toggles, and even the sort/filter/search pipeline all follow the same predictable pattern.
+- **Async isn't optional to understand.** Moving from a local array to a real API surfaced timing bugs that don't show up with synchronous code — rendering the cart before the product data had even finished loading, for instance. Debugging that taught me more about `async/await` than any tutorial could.
+- **Modules force you to think in boundaries.** Splitting one long file into eight modules meant constantly asking "whose responsibility is this?" — and running into real constraints, like read-only import bindings, that shaped how the final state design turned out.
+- **Responsive design is iterative, not one CSS pass.** Getting the hamburger menu right took several rounds of z-index conflicts, layout shifts, and rethinking `position: fixed` vs `absolute` — each one only visible by actually testing at different screen sizes.
+
+Every one of these lessons came from a bug, not from getting something right on the first try.
+
+## What's Next
+
+This vanilla JS build is the first half of a two-part project. The second half: rebuilding Veloura in **React**, using the exact same feature set — this time with the lived understanding of *why* things like state management and component re-rendering are handled the way they are.
+
+## License
+
+Built for learning purposes. Feel free to explore the code.
