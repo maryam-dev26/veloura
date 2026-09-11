@@ -67,7 +67,7 @@ No build step, no `npm install` — just serve the folder.
 
 | Product Grid | Cart Drawer | Mobile View |
 |---|---|---|
-| ![Grid view](./screenshots/grid.png) | ![Cart Drawer](./screenshots/cart.png) | ![Mobile View](./screenshots/mobile.png) |
+| ![Grid view](./screenshot/grid.png) | ![Cart Drawer](./screenshot/cart.png) | ![Mobile View](./screenshot/mobile.png) |
 
 ## What I Learned
 
